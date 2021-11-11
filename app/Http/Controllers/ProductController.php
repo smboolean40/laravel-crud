@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+use Exception;
 
 class ProductController extends Controller
 {
+    protected $validationRules = [
+        'title' => 'required|max:60',
+        'type' => 'required|max:15',
+        'cooking_time' => 'required|integer|min:1|max:255',
+        'weight' => 'required|integer|min:1',
+        'description' => 'required',
+        'image' => 'nullable|url'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -37,6 +47,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // validazione
+        $request->validate($this->validationRules);
+
         $data = $request->all();
 
         $newProduct = Product::create($data);
@@ -75,6 +88,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // validazione
+        $request->validate($this->validationRules);
+
         $data = $request->all();
 
         $product->update($data);
